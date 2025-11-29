@@ -11,6 +11,6 @@ mod utils {
 
 fn main() {
     println!("I'm still setting up this repo!!!");
-    solutions::parsing_practice::practice();
-    solutions::day_1::day_1();
+    // solutions::parsing_practice::practice();
+    println!("Day 1, part 1: {:?}", solutions::day_1::day_1());
 }
