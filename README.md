@@ -32,7 +32,12 @@ The following code will print all the solutions I have so far to the console.
 Note: requires `cookie.txt` file in this directory, which contains your AoC user cookie
 in order to get your inputs.
 
-```rust
+```bash
 cargo build
 cargo run
+```
+
+To build the docs, run:
+```bash
+cargo doc && cargo doc --open
 ```

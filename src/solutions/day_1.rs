@@ -1,6 +1,4 @@
-use crate::utils::{
-    get_input::get_aoc_input, parsing::split_lines, parsing::split_string_by_specified_char,
-};
+use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 pub fn day_1() {
     println!("This is a placeholder for AOC 2025 Day 1!");
