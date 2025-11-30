@@ -23,11 +23,15 @@ aoc-2025/
 ```
 
 - Each `day_XX.rs` file contains solutions for that day's puzzles, and maybe notes about it.
-- I will be writing unit tests for each day too. I tend to prefer completing AOC using TDD.
+- I will be writing unit tests for each day too. I tend to prefer completing AOC using semi-TDD.
 
 ## Running the Code
 
 The following code will print all the solutions I have so far to the console.
+
+Note: requires `cookie.txt` file in this directory, which contains your AoC user cookie
+in order to get your inputs.
+
 ```rust
 cargo build
 cargo run

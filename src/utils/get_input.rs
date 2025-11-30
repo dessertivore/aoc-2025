@@ -2,6 +2,15 @@ use reqwest;
 use std::fs;
 
 pub fn get_aoc_input(year: u32, day: u32) -> String {
+    let testing: bool = cfg!(test);
+    if testing {
+        if year != 2025 {
+            panic!("Only 2025 test inputs can be found here.")
+        }
+        let file_name: String = format!("test-inputs/day_{}.txt", day);
+        let text = fs::read_to_string(file_name).expect("Unable to read text file :(");
+        return text;
+    }
     let cookie = fs::read_to_string("cookie.txt")
         .expect("Failed to read cookie.txt")
         .trim()
@@ -23,5 +32,14 @@ pub fn get_aoc_input(year: u32, day: u32) -> String {
         return text;
     } else {
         panic!("Request failed with status: {}", response.status())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_get_aoc_test_input() {
+        assert_eq!(get_aoc_input(2025, 2025), "This is a test file :D");
     }
 }
