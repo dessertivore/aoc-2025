@@ -1,3 +1,4 @@
+use core::num;
 use std::collections::{HashSet, VecDeque};
 
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
@@ -23,8 +24,8 @@ fn find_largest_number(num_as_string: String) -> u64 {
     let mut current_pos: usize = 0;
     let mut largest_substring_num: u64 = 0;
     for first_ch in num_as_string[current_pos..len].chars() {
-        for secon_ch in num_as_string[current_pos + 1..len].chars() {
-            let full_num: u64 = format!("{}{}", first_ch, secon_ch)
+        for second_ch in num_as_string[current_pos + 1..len].chars() {
+            let full_num: u64 = format!("{}{}", first_ch, second_ch)
                 .parse::<u64>()
                 .unwrap_or(0);
             if full_num > largest_substring_num {
@@ -34,6 +35,26 @@ fn find_largest_number(num_as_string: String) -> u64 {
         current_pos += 1;
     }
     return largest_substring_num;
+}
+
+fn find_largest_number_recursive(
+    num_as_string: String,
+    remaining_chars: String,
+    max_num_len: usize,
+    largest_substring_num: u64,
+) -> Option<u64> {
+    if num_as_string.len() == max_num_len {
+        let final_num: u64 = num_as_string.parse::<u64>().unwrap_or(0);
+        if final_num > largest_substring_num {
+            return Some(final_num);
+        } else {
+            None
+        }
+    } else {
+        for second_ch in remaining_chars.chars() {
+            find_largest_number_recursive()
+        }
+    }
 }
 
 #[cfg(test)]
