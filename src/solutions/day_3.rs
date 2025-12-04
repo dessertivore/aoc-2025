@@ -37,25 +37,25 @@ fn find_largest_number(num_as_string: String) -> u64 {
     return largest_substring_num;
 }
 
-fn find_largest_number_recursive(
-    num_as_string: String,
-    remaining_chars: String,
-    max_num_len: usize,
-    largest_substring_num: u64,
-) -> Option<u64> {
-    if num_as_string.len() == max_num_len {
-        let final_num: u64 = num_as_string.parse::<u64>().unwrap_or(0);
-        if final_num > largest_substring_num {
-            return Some(final_num);
-        } else {
-            None
-        }
-    } else {
-        for second_ch in remaining_chars.chars() {
-            find_largest_number_recursive()
-        }
-    }
-}
+// fn find_largest_number_recursive(
+//     num_as_string: String,
+//     remaining_chars: String,
+//     max_num_len: usize,
+//     largest_substring_num: u64,
+// ) -> Option<u64> {
+//     if num_as_string.len() == max_num_len {
+//         let final_num: u64 = num_as_string.parse::<u64>().unwrap_or(0);
+//         if final_num > largest_substring_num {
+//             return Some(final_num);
+//         } else {
+//             None
+//         }
+//     } else {
+//         for second_ch in remaining_chars.chars() {
+//             find_largest_number_recursive()
+//         }
+//     }
+// }
 
 #[cfg(test)]
 mod tests {
