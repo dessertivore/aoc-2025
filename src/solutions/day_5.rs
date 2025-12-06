@@ -1,4 +1,7 @@
-use std::collections::{btree_map::Range, HashSet};
+use std::{
+    cmp::{max, min},
+    collections::{btree_map::Range, HashSet},
+};
 
 use crate::utils::{
     get_input::get_aoc_input, parsing::split_lines, parsing::split_string_by_specified_char,
@@ -12,9 +15,10 @@ pub fn day_5() -> usize {
 }
 
 struct KitchenInventory {
-    valid_ranges: HashSet<(u64, u64)>,
+    valid_ranges: Vec<(u64, u64)>,
     ingredient_ids: HashSet<u64>,
     validated_ingredients: HashSet<u64>,
+    current_num_valid_ids: u64,
 }
 
 impl KitchenInventory {
@@ -27,14 +31,48 @@ impl KitchenInventory {
             }
         }
     }
+
+    fn add_range(&mut self, mut new_range: (u64, u64)) {
+        let mut new_ranges: Vec<(u64, u64)> = Vec::new();
+        let mut no_overlap: bool = true;
+        while let Some(range) = self.valid_ranges.pop() {
+            if (range.0..range.1).contains(&new_range.0)
+                || (range.0..range.1).contains(&new_range.1)
+            {
+                new_range.0 = min(range.0, new_range.0);
+                new_range.1 = max(range.1, new_range.1);
+                new_ranges.push(new_range); // extend range
+                self.current_num_valid_ids += new_range.1.abs_diff(new_range.0);
+                self.current_num_valid_ids -= range.1.abs_diff(range.0); // remove old range sum
+                no_overlap = false;
+                break;
+            } else {
+                new_ranges.push(range); // keep old range
+            }
+        }
+        if no_overlap {
+            new_ranges.push(new_range); // add new range and new range sum
+            self.current_num_valid_ids += new_range.1.abs_diff(new_range.0);
+        } else {
+            new_ranges.extend(self.valid_ranges.clone()) //add old ranges back in
+        }
+        self.valid_ranges = new_ranges;
+    }
+
+    fn add_ranges(&mut self, new_ranges: Vec<(u64, u64)>) {
+        for range in new_ranges {
+            self.add_range(range);
+        }
+    }
 }
 
-fn num_valid_ingredients() -> usize {
+fn parse_input() -> KitchenInventory {
     let input: Vec<String> = split_string_by_specified_char(get_aoc_input(2025, 5), "\n\n");
     let mut ingredients_parsed = KitchenInventory {
-        valid_ranges: HashSet::new(),
+        valid_ranges: Vec::new(),
         ingredient_ids: HashSet::new(),
         validated_ingredients: HashSet::new(),
+        current_num_valid_ids: 0,
     };
     for range in split_lines(input[0].clone()).iter() {
         let nums: Vec<u64> = range
@@ -44,9 +82,8 @@ fn num_valid_ingredients() -> usize {
                     .expect("Failed to convert range to numbers")
             })
             .collect();
-        ingredients_parsed
-            .valid_ranges
-            .insert((nums[0], nums[1] + 1));
+        ingredients_parsed.add_range((nums[0], nums[1] + 1));
+        println!("{:?}", ingredients_parsed.valid_ranges)
     }
     let ingredient_ids: Vec<u64> = split_lines(input[1].clone())
         .into_iter()
@@ -58,6 +95,11 @@ fn num_valid_ingredients() -> usize {
     for id in ingredient_ids {
         ingredients_parsed.ingredient_ids.insert(id);
     }
+    return ingredients_parsed;
+}
+
+fn num_valid_ingredients() -> usize {
+    let mut ingredients_parsed: KitchenInventory = parse_input();
     ingredients_parsed.validate_ingredients();
     return ingredients_parsed.validated_ingredients.len();
 }
@@ -68,5 +110,6 @@ mod tests {
     #[test]
     fn test_day_5() {
         assert_eq!(num_valid_ingredients(), 3);
+        assert_eq!(parse_input().current_num_valid_ids, 14);
     }
 }
