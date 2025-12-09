@@ -1,6 +1,7 @@
 use std::{
     cmp::{max, min},
     collections::{HashMap, HashSet},
+    thread::current,
 };
 
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
@@ -15,14 +16,18 @@ pub fn day_9() -> u64 {
 #[derive(Debug, Clone)]
 struct MovieTheatre {
     all_red_tile_coords: HashMap<u64, (u64, u64)>,
+    all_green_tile_coords: HashSet<(u64, u64)>,
     rectangle_areas: HashMap<(u64, u64), u64>,
+    max_id: u64,
 }
 
 impl MovieTheatre {
     fn new() -> Self {
         MovieTheatre {
             all_red_tile_coords: HashMap::new(),
+            all_green_tile_coords: HashSet::new(),
             rectangle_areas: HashMap::new(),
+            max_id: 0,
         }
     }
 
@@ -33,6 +38,51 @@ impl MovieTheatre {
                 .insert(sorted_key, rectangle_area(coord, *other_coord));
         }
         self.all_red_tile_coords.insert(id, coord);
+        if id > self.max_id {
+            self.max_id = id;
+        }
+    }
+
+    fn find_all_greens(&mut self) {
+        for (id, coord) in self.all_red_tile_coords.iter() {
+            let previous_red: &(u64, u64);
+            if *id == 0 as u64 {
+                previous_red = self.all_red_tile_coords.get(&self.max_id).unwrap();
+            } else {
+                // There are other red tiles, time to calculate coords of green tiles!
+                previous_red = self.all_red_tile_coords.get(&(id - 1)).unwrap();
+            }
+            let current_x = max(previous_red.0, coord.0);
+            let target_x = min(previous_red.0, coord.0);
+            let current_y = max(previous_red.1, coord.1);
+            let target_y = min(previous_red.1, coord.1);
+
+            let x_step: i64 = if current_x < target_x {
+                1
+            } else if current_x > target_x {
+                -1
+            } else {
+                0
+            };
+            let y_step: i64 = if current_y < target_y {
+                1
+            } else if current_y > target_y {
+                -1
+            } else {
+                0
+            };
+
+            let mut current = (current_x, current_y);
+            while current != (target_x, target_y) {
+                println!("{:?},{:?},{:?}", current, target_x, target_y);
+
+                self.all_green_tile_coords.insert(current);
+                current = (
+                    (current.0 as i64 + x_step) as u64,
+                    (current.1 as i64 + y_step) as u64,
+                );
+            }
+        }
     }
 }
 
@@ -64,11 +114,23 @@ fn largest_area() -> u64 {
     return *largest_area;
 }
 
+fn largest_red_area_without_greens() -> u64 {
+    let mut movie_theatre = parse_input();
+    movie_theatre.find_all_greens();
+    println!("{:?}", movie_theatre.all_green_tile_coords);
+    return 0;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
     fn test_day_9() {
         assert_eq!(largest_area(), 50);
+    }
+
+    #[test]
+    fn test_day_9_part_2() {
+        largest_red_area_without_greens();
     }
 }
