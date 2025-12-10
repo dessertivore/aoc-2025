@@ -4,8 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+bitgauss = "0.3.4"
 kd-tree = "0.6.2"
 kdtree = "0.8.0"
+regex = "1.12.2"
 reqwest = { version = "0.12", features = ["blocking","cookies"] }
 serde = "1.0.228"
 typenum = "1.19.0"
