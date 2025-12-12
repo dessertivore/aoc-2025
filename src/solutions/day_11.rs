@@ -1,14 +1,25 @@
+use rayon::prelude::*;
 use regex::Regex;
-use std::collections::{HashMap, HashSet};
+use std::collections::hash_map::DefaultHasher;
+use std::hash::Hasher;
+use std::{
+    collections::{HashMap, HashSet},
+    hash::Hash,
+};
 
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 // /// Runs the solution for Advent of Code Day 11.
 pub fn day_11() -> usize {
     let mut server_rack = parse_input(11);
-    server_rack.dfs("you".to_string(), &mut Vec::new());
+    server_rack.dfs(
+        "you".to_string(),
+        "out".to_string(),
+        &mut Vec::new(),
+        &mut HashMap::new(),
+    );
     let part_1 = server_rack.paths_so_far.len();
-    let part_2 = part_2().len();
+    let part_2 = part_2();
     println!("Day 11! Part 1: {:?}, Part 2: {:?}", part_1, part_2);
     return part_1;
 }
@@ -19,6 +30,8 @@ struct ServerRack {
     node_to_id: HashMap<String, u32>,
     id_to_node: HashMap<u32, String>,
     paths_so_far: HashSet<Vec<u32>>,
+    dac_id: Option<u32>,
+    fft_id: Option<u32>,
 }
 
 impl ServerRack {
@@ -28,28 +41,94 @@ impl ServerRack {
             node_to_id: HashMap::new(),
             id_to_node: HashMap::new(),
             paths_so_far: HashSet::new(),
+            dac_id: None,
+            fft_id: None,
         }
     }
 
-    fn dfs(&mut self, source: String, path: &mut Vec<u32>) {
-        if source == "out" {
+    fn dac_id(&mut self) -> Option<u32> {
+        if self.dac_id.is_none() {
+            self.dac_id = Some(self.node_to_id["dac"]);
+        }
+
+        return self.dac_id;
+    }
+
+    fn fft_id(&mut self) -> Option<u32> {
+        if self.fft_id.is_none() {
+            self.fft_id = Some(self.node_to_id["fft"]);
+        }
+
+        return self.fft_id;
+    }
+
+    fn dfs(
+        &mut self,
+        source: String,
+        dest: String,
+        path: &mut Vec<u32>,
+        memo: &mut HashMap<(String, Vec<u32>), HashSet<Vec<u32>>>,
+    ) {
+        let key = (source.clone(), path.clone());
+        if let Some(cached_paths) = memo.get(&key) {
+            self.paths_so_far.extend(cached_paths.clone());
+            return;
+        }
+
+        if source == dest.clone() {
             self.paths_so_far.insert(path.clone());
+            memo.insert(key.clone(), self.paths_so_far.clone());
+            return;
         } else {
             if let Some(&node_id) = self.node_to_id.get(&source) {
                 path.push(node_id);
-                let neighbors: Vec<String> = self
-                    .connections
-                    .get(&source)
-                    .unwrap_or(&HashSet::new())
-                    .iter()
-                    .cloned()
-                    .collect::<Vec<String>>();
-                for x in neighbors {
-                    self.dfs(x, path);
+                if let Some(neighbors) = self.connections.get(&source) {
+                    for neighbor in neighbors.clone() {
+                        self.dfs(neighbor, dest.clone(), path, memo);
+                    }
+                    path.pop();
+                }
+            }
+            memo.insert(key.clone(), self.paths_so_far.clone());
+        }
+    }
+
+    fn dfs_part_2(
+        &mut self,
+        source: &String,
+        dest: &String,
+        path: &mut Vec<u32>,
+        memo: &mut HashMap<u64, HashSet<Vec<u32>>>,
+    ) {
+        let mut hasher = DefaultHasher::new();
+        source.hash(&mut hasher);
+        path.last().unwrap_or(&0).hash(&mut hasher); // Use only the last node in the path
+        let key = hasher.finish();
+
+        if let Some(cached_paths) = memo.get(&key) {
+            self.paths_so_far.extend(cached_paths.clone());
+            return;
+        }
+        let mut current_paths: HashSet<Vec<u32>> = HashSet::new();
+
+        if source == dest {
+            // if path.contains(&self.dac_id().unwrap()) && path.contains(&self.fft_id().unwrap()) {
+            self.paths_so_far.insert(path.clone());
+            current_paths.insert(path.clone());
+            // }
+        } else {
+            if let Some(&node_id) = self.node_to_id.get(source) {
+                path.push(node_id);
+                if let Some(neighbors) = self.connections.get(source).cloned() {
+                    for neighbor in neighbors {
+                        self.dfs_part_2(&neighbor, dest, path, memo);
+                    }
                 }
                 path.pop();
             }
         }
+        memo.insert(key.clone(), current_paths.clone());
+        self.paths_so_far.extend(current_paths);
     }
 }
 
@@ -77,39 +156,52 @@ fn parse_input(day: u8) -> ServerRack {
     server_rack
 }
 
-fn part_2() -> HashSet<Vec<u32>> {
+fn part_2() -> u64 {
     let testing: bool = cfg!(test);
-    let mut no_dac: ServerRack;
+    let mut svr_to_dac: ServerRack;
     if testing {
-        no_dac = parse_input(25); // saved under day 25 because part 2 has diff test input
+        svr_to_dac = parse_input(25); // saved under day 25 because part 2 has diff test input
     } else {
-        no_dac = parse_input(11);
+        svr_to_dac = parse_input(11);
     }
-    let mut no_fft = no_dac.clone();
-    let mut all_items = no_dac.clone();
-    all_items.dfs("svr".to_string(), &mut Vec::new());
-    println!("Got all items");
 
-    no_fft.node_to_id.remove("fft");
-    no_fft.dfs("svr".to_string(), &mut Vec::new());
+    // Clone the initial `ServerRack` for each DFS call
+    let racks = vec![
+        ("svr", "dac", svr_to_dac.clone()),
+        ("svr", "fft", svr_to_dac.clone()),
+        ("fft", "dac", svr_to_dac.clone()),
+        ("dac", "fft", svr_to_dac.clone()),
+        ("fft", "out", svr_to_dac.clone()),
+        ("dac", "out", svr_to_dac.clone()),
+    ];
 
-    println!("Got no_fft");
-    no_dac.node_to_id.remove("dac");
-    no_dac.dfs("svr".to_string(), &mut Vec::new());
-    println!("Got no_dac");
+    // Use `par_iter` to parallelize the DFS calls
+    let results: Vec<HashSet<Vec<u32>>> = racks
+        .into_par_iter()
+        .map(|(start, end, mut rack)| {
+            rack.dfs_part_2(
+                &start.to_string(),
+                &end.to_string(),
+                &mut Vec::new(),
+                &mut HashMap::new(),
+            );
+            rack.paths_so_far
+        })
+        .collect();
 
-    let no_dac_overlap_no_fft = no_dac
-        .paths_so_far
-        .union(&no_fft.paths_so_far)
-        .cloned()
-        .collect::<HashSet<Vec<u32>>>();
-    let no_dac_overlap_no_fft_diff_from_all_routes = all_items
-        .paths_so_far
-        .difference(&no_dac_overlap_no_fft)
-        .cloned()
-        .collect::<HashSet<Vec<u32>>>();
+    // Extract the results
+    let svr_to_dac = results[0].len();
+    let svr_to_fft = results[1].len();
+    let fft_to_dac = results[2].len();
+    let dac_to_fft = results[3].len();
+    let fft_to_out = results[4].len();
+    let dac_to_out = results[5].len();
 
-    return no_dac_overlap_no_fft_diff_from_all_routes;
+    // Compute the final result
+    let svr_dac_fft_out = svr_to_dac * dac_to_fft * fft_to_out;
+    let svr_fft_dac_out = svr_to_fft * fft_to_dac * dac_to_out;
+
+    svr_dac_fft_out as u64 + svr_fft_dac_out as u64
 }
 
 #[cfg(test)]
@@ -119,13 +211,18 @@ mod tests {
     fn test_day_11() {
         // assert_eq!(largest_area(), 50);
         let mut test = parse_input(11);
-        test.dfs("you".to_string(), &mut Vec::new());
+        test.dfs(
+            "you".to_string(),
+            "out".to_string(),
+            &mut Vec::new(),
+            &mut HashMap::new(),
+        );
         assert_eq!(test.paths_so_far.len(), 5);
         println!("{:?},{:?}", parse_input(11), test.paths_so_far.len());
     }
 
     #[test]
     fn test_part_2() {
-        assert_eq!(part_2().len(), 2);
+        assert_eq!(part_2(), 2);
     }
 }
