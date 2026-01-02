@@ -26,11 +26,11 @@ pub fn day_2() -> (u64, u64) {
 ///
 /// # Panics
 /// Panics if the input is malformed or cannot be parsed into integers.
-fn parse_range(range_str: &str) -> std::ops::Range<u64> {
+fn parse_range(range_str: &str) -> std::ops::RangeInclusive<u64> {
     let parts: Vec<&str> = range_str.split('-').collect();
     let start: u64 = parts[0].trim_end().parse().expect("Invalid start of range");
     let end: u64 = parts[1].trim_end().parse().expect("Invalid end of range");
-    return start..(end + 1);
+    return start..=end;
 }
 
 /// Checks whether the first half of a string is exactly equal to the second half.
