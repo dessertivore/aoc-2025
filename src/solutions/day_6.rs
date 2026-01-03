@@ -1,13 +1,11 @@
-use crate::utils::{
-    get_input::get_aoc_input,
-    parsing::{split_lines, split_string_by_specified_char},
-};
+use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 6.
 pub fn day_6() -> u64 {
     let part_1 = solve_all_lines(true);
     println!("Day 6! Part 1: {:?}", part_1);
-    return part_1;
+
+    part_1
 }
 
 #[derive(Debug)]
@@ -28,7 +26,8 @@ impl MathsSheet {
                 self.instructions[operator_pos]
             ),
         }
-        return line_total;
+
+        line_total
     }
 
     fn solve_all_lines(&self) -> u64 {
@@ -36,7 +35,8 @@ impl MathsSheet {
         for pos in 0..self.lines_of_numbers.len() {
             grand_total += self.solve_line(self.lines_of_numbers[pos].clone(), pos);
         }
-        return grand_total;
+
+        grand_total
     }
 
     // fn part_2_line_parsing(&self) {
@@ -75,7 +75,8 @@ fn solve_all_lines(part_1: bool) -> u64 {
         if cfg!(test) {
             println!("{:?}", sheet);
         }
-        return sheet.solve_all_lines();
+
+        sheet.solve_all_lines()
     } else {
         // for line in input {
         //     let mut pos = 0;
@@ -97,7 +98,8 @@ fn solve_all_lines(part_1: bool) -> u64 {
         if cfg!(test) {
             println!("{:?}", sheet);
         }
-        return sheet.solve_all_lines();
+
+        sheet.solve_all_lines()
     }
 }
 

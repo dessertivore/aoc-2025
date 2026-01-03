@@ -17,7 +17,6 @@
 pub fn day_8() {
     // let part_1 = parse_input();
     // println!("Day 8! Part 1: {:?}", part_1);
-    return;
 }
 
 // #[derive(Debug, Clone)]

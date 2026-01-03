@@ -1,8 +1,4 @@
-use core::num;
-use std::{
-    collections::{HashSet, VecDeque},
-    hash::Hash,
-};
+use std::collections::HashSet;
 
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
@@ -10,7 +6,8 @@ use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 pub fn day_4() -> u64 {
     let part_1 = find_total_accessible_rolls();
     println!("Day 4! Part 1: {:?}", part_1);
-    return part_1;
+
+    part_1
 }
 
 fn get_neighbours(x: usize, y: usize) -> Vec<(isize, isize)> {
@@ -43,7 +40,7 @@ fn get_roll_coords() -> (HashSet<(usize, usize)>, usize, usize) {
             }
         }
     }
-    return (roll_map, max_x, max_y);
+    (roll_map, max_x, max_y)
 }
 fn find_total_accessible_rolls() -> u64 {
     let (roll_map, max_x, max_y) = get_roll_coords();
@@ -63,7 +60,8 @@ fn find_total_accessible_rolls() -> u64 {
             accessible_rolls += 1;
         }
     }
-    return accessible_rolls;
+
+    accessible_rolls
 }
 
 #[cfg(test)]

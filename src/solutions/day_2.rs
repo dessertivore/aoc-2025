@@ -13,7 +13,8 @@ pub fn day_2() -> (u64, u64) {
     let part_1 = find_all_invalid_ids(1);
     let part_2 = find_all_invalid_ids(2);
     println!("Day 2! Part 1: {:?}, part 2: {:?}", part_1, part_2);
-    return (part_1, part_2);
+
+    (part_1, part_2)
 }
 
 /// Parses a numeric range of the form `"start-end"` into a `Range<u64>`.
@@ -30,7 +31,8 @@ fn parse_range(range_str: &str) -> std::ops::RangeInclusive<u64> {
     let parts: Vec<&str> = range_str.split('-').collect();
     let start: u64 = parts[0].trim_end().parse().expect("Invalid start of range");
     let end: u64 = parts[1].trim_end().parse().expect("Invalid end of range");
-    return start..=end;
+
+    start..=end
 }
 
 /// Checks whether the first half of a string is exactly equal to the second half.
@@ -50,7 +52,7 @@ fn parse_range(range_str: &str) -> std::ops::RangeInclusive<u64> {
 fn first_half_is_second_half_of_num(num: String) -> Option<String> {
     let chars: Vec<char> = num.chars().collect();
     let mid = chars.len() / 2;
-    if &chars[..mid] == &chars[mid..] {
+    if chars[..mid] == chars[mid..] {
         return Some(num);
     }
     None
@@ -75,7 +77,7 @@ fn find_repeats_in_num(num: String) -> Option<u64> {
 
     for len in 1..=n / 2 {
         // The substring length must divide the whole string length
-        if n % len != 0 {
+        if !n.is_multiple_of(len) {
             continue;
         }
         let pattern: &str = &num[..len];
@@ -108,8 +110,7 @@ fn check_range_for_repeats(range_str: &str, part: u8) -> HashSet<u64> {
     let mut results: HashSet<u64> = HashSet::new();
     let mut part_2: HashSet<u64> = HashSet::new();
     for x in range {
-        let repeats: Option<String>;
-        repeats = first_half_is_second_half_of_num(x.to_string());
+        let repeats: Option<String> = first_half_is_second_half_of_num(x.to_string());
         if part == 2 {
             if let Some(part_2_resp) = find_repeats_in_num(x.to_string()) {
                 part_2.insert(part_2_resp);
@@ -120,7 +121,8 @@ fn check_range_for_repeats(range_str: &str, part: u8) -> HashSet<u64> {
     if part == 2 {
         results.extend(part_2);
     }
-    return results;
+
+    results
 }
 
 /// Processes all comma-separated ranges from the input and sums
@@ -144,7 +146,8 @@ fn find_all_invalid_ids(part: u8) -> u64 {
         let results = check_range_for_repeats(&item, part);
         total.extend(results);
     }
-    return total.iter().fold(0, |acc, x| acc + x);
+
+    total.iter().sum::<u64>()
 }
 
 #[cfg(test)]

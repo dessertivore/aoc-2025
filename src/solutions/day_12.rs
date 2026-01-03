@@ -1,16 +1,16 @@
-use regex::Regex;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 // /// Runs the solution for Advent of Code Day 12.
 pub fn day_12() -> usize {
-    let mut part_1 = can_they_fit();
+    let part_1 = can_they_fit();
     println!(
         "Day 12! Part 1: {:?}, Part 2: {:?}",
         part_1, "not done yet!"
     );
-    return 1;
+
+    1 // placeholder return
 }
 
 #[derive(Debug)]

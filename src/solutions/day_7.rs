@@ -1,9 +1,6 @@
-use std::collections::{BTreeSet, HashMap, HashSet};
+use std::collections::{HashMap, HashSet};
 
-use crate::utils::{
-    get_input::get_aoc_input,
-    parsing::{split_lines, split_string_by_specified_char},
-};
+use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 7.
 pub fn day_7() -> u32 {
@@ -11,7 +8,8 @@ pub fn day_7() -> u32 {
     let manifold = parse_input();
     let part_2 = recursive_find_paths(manifold, HashSet::new(), HashMap::new());
     println!("Day 7! Part 1: {:?}, Part 2: {:?}", part_1, part_2);
-    return part_1;
+
+    part_1
 }
 
 #[derive(Debug, Clone)]
@@ -73,7 +71,8 @@ impl TachyonManifold {
             let vec = Vec::from_iter(coords);
             vec_path.push(vec[0]);
         }
-        return vec_path;
+
+        vec_path
     }
 }
 
@@ -84,7 +83,7 @@ fn recursive_find_paths(
 ) -> HashSet<Vec<u32>> {
     let check_cache: u32 = manifold.clone().current_x_cord;
     let cached: Option<HashSet<Vec<u32>>> = memo.get(&check_cache).cloned();
-    if !cached.is_none() {
+    if cached.is_some() {
         return memo.get(&check_cache).unwrap().clone();
     }
     if manifold.current_x_cord >= manifold.max_x {
@@ -100,7 +99,8 @@ fn recursive_find_paths(
 
     let mut combined = all_left;
     combined.extend(all_right);
-    return combined;
+
+    combined
 }
 
 fn parse_input() -> TachyonManifold {
@@ -108,9 +108,9 @@ fn parse_input() -> TachyonManifold {
     let mut manifold = TachyonManifold::new();
     for (x_coord, line) in raw_input.iter().enumerate() {
         for (y_coord, char) in line.chars().enumerate() {
-            if char.to_string() == "S".to_string() {
+            if char.to_string() == "S" {
                 manifold.current_tachyon_beams_coords.insert(y_coord as u32);
-            } else if char.to_string() == "^".to_string() {
+            } else if char.to_string() == "^" {
                 manifold.splitters.insert((x_coord as u32, y_coord as u32));
             }
             if y_coord as u32 > manifold.max_y {
@@ -126,7 +126,8 @@ fn parse_input() -> TachyonManifold {
 fn count_splits() -> u32 {
     let mut manifold = parse_input();
     manifold.move_to_bottom_of_map();
-    return manifold.splits_so_far;
+
+    manifold.splits_so_far
 }
 
 #[cfg(test)]

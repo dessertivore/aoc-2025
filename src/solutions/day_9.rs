@@ -1,7 +1,6 @@
 use std::{
     cmp::{max, min},
     collections::{HashMap, HashSet},
-    thread::current,
 };
 
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
@@ -10,7 +9,8 @@ use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 pub fn day_9() -> u64 {
     let part_1 = largest_area();
     println!("Day 9! Part 1: {:?}, Part 2: {:?}", part_1, "Not done yet!");
-    return part_1;
+
+    part_1
 }
 
 #[derive(Debug, Clone)]
@@ -46,7 +46,7 @@ impl MovieTheatre {
     fn find_all_greens(&mut self) {
         for (id, coord) in self.all_red_tile_coords.iter() {
             let previous_red: &(u64, u64);
-            if *id == 0 as u64 {
+            if *id == 0 {
                 previous_red = self.all_red_tile_coords.get(&self.max_id).unwrap();
             } else {
                 // There are other red tiles, time to calculate coords of green tiles!
@@ -89,8 +89,8 @@ impl MovieTheatre {
 fn rectangle_area(coord_1: (u64, u64), coord_2: (u64, u64)) -> u64 {
     let y_diff = coord_2.1.abs_diff(coord_1.1) + 1;
     let x_diff = coord_2.0.abs_diff(coord_1.0) + 1;
-    let area = x_diff * y_diff;
-    return area;
+
+    x_diff * y_diff
 }
 
 fn parse_input() -> MovieTheatre {
@@ -105,20 +105,22 @@ fn parse_input() -> MovieTheatre {
         let y_coord = coords_split[1];
         movie_theatre.add_coord((x_coord, y_coord), id as u64);
     }
+
     movie_theatre
 }
 
 fn largest_area() -> u64 {
     let movie_theatre = parse_input();
     let largest_area = movie_theatre.rectangle_areas.values().max().unwrap();
-    return *largest_area;
+    *largest_area
 }
 
 fn largest_red_area_without_greens() -> u64 {
     let mut movie_theatre = parse_input();
     movie_theatre.find_all_greens();
     println!("{:?}", movie_theatre.all_green_tile_coords);
-    return 0;
+
+    0 // Placeholder
 }
 
 #[cfg(test)]

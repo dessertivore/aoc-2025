@@ -1,6 +1,6 @@
 use std::{
     cmp::{max, min},
-    collections::{btree_map::Range, HashSet},
+    collections::HashSet,
 };
 
 use crate::utils::{
@@ -11,7 +11,8 @@ use crate::utils::{
 pub fn day_5() -> usize {
     let part_1 = num_valid_ingredients();
     println!("Day 5! Part 1: {:?}", part_1);
-    return part_1;
+
+    part_1
 }
 
 struct KitchenInventory {
@@ -95,13 +96,15 @@ fn parse_input() -> KitchenInventory {
     for id in ingredient_ids {
         ingredients_parsed.ingredient_ids.insert(id);
     }
-    return ingredients_parsed;
+
+    ingredients_parsed
 }
 
 fn num_valid_ingredients() -> usize {
     let mut ingredients_parsed: KitchenInventory = parse_input();
     ingredients_parsed.validate_ingredients();
-    return ingredients_parsed.validated_ingredients.len();
+
+    ingredients_parsed.validated_ingredients.len()
 }
 
 #[cfg(test)]

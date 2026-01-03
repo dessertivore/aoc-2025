@@ -45,7 +45,12 @@ fn move_dial(input: Option<Vec<String>>, part_2: bool) -> i16 {
             at_zero += 1;
         }
     }
-    return if part_2 { pass_zero } else { at_zero };
+
+    if part_2 {
+        pass_zero
+    } else {
+        at_zero
+    }
 }
 
 #[cfg(test)]

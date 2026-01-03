@@ -16,7 +16,8 @@ pub fn day_10() -> u64 {
         "Day 10! Part 1: {:?}, Part 2: {:?}",
         part_1, "Not done yet!"
     );
-    return part_1;
+
+    part_1
 }
 
 // #[derive(Debug, Clone)]

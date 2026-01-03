@@ -1,5 +1,4 @@
-use core::num;
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::VecDeque;
 
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
@@ -8,7 +7,8 @@ pub fn day_3() -> u64 {
     let part_1 = find_total_joltage(true);
     let part_2 = find_total_joltage(false);
     println!("Day 3! Part 1: {:?}, part 2: {:?}", part_1, part_2);
-    return part_1;
+
+    part_1
 }
 
 fn find_total_joltage(part_1: bool) -> u64 {
@@ -21,7 +21,8 @@ fn find_total_joltage(part_1: bool) -> u64 {
             all_nums.push_front(find_largest_number_variable_length(num, 12));
         }
     }
-    return all_nums.iter().sum();
+
+    all_nums.iter().sum()
 }
 
 fn find_largest_number(num_as_string: String) -> u64 {
@@ -39,7 +40,8 @@ fn find_largest_number(num_as_string: String) -> u64 {
         }
         current_pos += 1;
     }
-    return largest_substring_num;
+
+    largest_substring_num
 }
 
 fn find_largest_number_variable_length(num: String, target_len: usize) -> u64 {
@@ -57,7 +59,7 @@ fn find_largest_number_variable_length(num: String, target_len: usize) -> u64 {
     // Remove extra digits from the end if needed
     stack.truncate(target_len);
 
-    return stack.iter().collect::<String>().parse().unwrap();
+    stack.iter().collect::<String>().parse().unwrap()
 }
 
 #[cfg(test)]
@@ -65,7 +67,7 @@ mod tests {
     use super::*;
     #[test]
     fn test_day_3() {
-        assert_eq!(find_total_joltage(), 357);
+        assert_eq!(find_total_joltage(true), 357);
     }
     #[test]
     fn test_check_range_for_repeats() {
@@ -78,8 +80,8 @@ mod tests {
     #[test]
     fn test_part_2() {
         assert_eq!(
-            find_largest_number_variable_length("234234234234278", 12),
-            "434234234278"
+            find_largest_number_variable_length("234234234234278".to_string(), 12),
+            434234234278
         )
     }
 }

@@ -21,7 +21,8 @@ pub fn day_11() -> usize {
     let part_1 = server_rack.paths_so_far.len();
     let part_2 = part_2();
     println!("Day 11! Part 1: {:?}, Part 2: {:?}", part_1, part_2);
-    return part_1;
+
+    part_1
 }
 
 #[derive(Debug, Clone)]
@@ -51,7 +52,7 @@ impl ServerRack {
             self.dac_id = Some(self.node_to_id["dac"]);
         }
 
-        return self.dac_id;
+        self.dac_id
     }
 
     fn fft_id(&mut self) -> Option<u32> {
@@ -59,7 +60,7 @@ impl ServerRack {
             self.fft_id = Some(self.node_to_id["fft"]);
         }
 
-        return self.fft_id;
+        self.fft_id
     }
 
     fn dfs(
@@ -78,7 +79,6 @@ impl ServerRack {
         if source == dest.clone() {
             self.paths_so_far.insert(path.clone());
             memo.insert(key.clone(), self.paths_so_far.clone());
-            return;
         } else {
             if let Some(&node_id) = self.node_to_id.get(&source) {
                 path.push(node_id);
@@ -127,7 +127,7 @@ impl ServerRack {
                 path.pop();
             }
         }
-        memo.insert(key.clone(), current_paths.clone());
+        memo.insert(key, current_paths.clone());
         self.paths_so_far.extend(current_paths);
     }
 }
