@@ -1,0 +1,10 @@
+repos:
+  - repo: https://github.com/LiquidFun/aoc_tiles
+    rev: 0.7.2
+    hooks:
+      - id: aoc-tiles
+        args:
+          - --auto-add-tiles-to-git=amend
+          - --overwrite-year=2025
+          - --count-as-solved-when=on_leaderboard
+          - --what-to-show-on-right-side=checkmark

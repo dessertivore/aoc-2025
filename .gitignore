@@ -2,3 +2,5 @@
 cookie.txt
 Cargo.lock
 .vscode/*
+.aoc_tiles/*
+!.aoc_tiles/tiles/

@@ -41,3 +41,45 @@ To build the docs, run:
 ```bash
 cargo doc && cargo doc --open
 ```
+
+<!-- AOC TILES BEGIN -->
+<h1 align="center">
+  2025 - 13 ⭐ - Rust
+</h1>
+<a href="src/solutions/day_1.rs">
+  <img src=".aoc_tiles/tiles/2025/01.png" width="203px">
+</a>
+<a href="src/solutions/day_2.rs">
+  <img src=".aoc_tiles/tiles/2025/02.png" width="203px">
+</a>
+<a href="src/solutions/day_3.rs">
+  <img src=".aoc_tiles/tiles/2025/03.png" width="203px">
+</a>
+<a href="src/solutions/day_4.rs">
+  <img src=".aoc_tiles/tiles/2025/04.png" width="203px">
+</a>
+<a href="src/solutions/day_5.rs">
+  <img src=".aoc_tiles/tiles/2025/05.png" width="203px">
+</a>
+<a href="src/solutions/day_6.rs">
+  <img src=".aoc_tiles/tiles/2025/06.png" width="203px">
+</a>
+<a href="src/solutions/day_7.rs">
+  <img src=".aoc_tiles/tiles/2025/07.png" width="203px">
+</a>
+<a href="src/solutions/day_8.rs">
+  <img src=".aoc_tiles/tiles/2025/08.png" width="203px">
+</a>
+<a href="src/solutions/day_9.rs">
+  <img src=".aoc_tiles/tiles/2025/09.png" width="203px">
+</a>
+<a href="src/solutions/day_10.rs">
+  <img src=".aoc_tiles/tiles/2025/10.png" width="203px">
+</a>
+<a href="src/solutions/day_11.rs">
+  <img src=".aoc_tiles/tiles/2025/11.png" width="203px">
+</a>
+<a href="src/solutions/day_12.rs">
+  <img src=".aoc_tiles/tiles/2025/12.png" width="203px">
+</a>
+<!-- AOC TILES END -->
