@@ -3,14 +3,16 @@ use std::collections::HashSet;
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 4.
-pub fn day_4() -> u64 {
-    let part_1 = find_total_accessible_rolls();
-    println!("Day 4! Part 1: {:?}", part_1);
-
-    part_1
+pub fn day_4() {
+    let part_1 = find_total_accessible_rolls(None);
+    println!(
+        "Day 4! Part 1: {:?}, Part 2: {:?}",
+        part_1.len(),
+        remove_rolls_as_you_go()
+    );
 }
 
-fn get_neighbours(x: usize, y: usize) -> Vec<(isize, isize)> {
+fn get_neighbours(x: u32, y: u32) -> Vec<(isize, isize)> {
     let directions = [
         (-1, -1),
         (-1, 0),
@@ -28,28 +30,35 @@ fn get_neighbours(x: usize, y: usize) -> Vec<(isize, isize)> {
         .collect()
 }
 
-fn get_roll_coords() -> (HashSet<(usize, usize)>, usize, usize) {
+fn get_roll_coords() -> HashSet<(u32, u32)> {
     let input: Vec<String> = split_lines(get_aoc_input(2025, 4));
-    let mut roll_map: HashSet<(usize, usize)> = HashSet::new();
-    let max_x = input[0].len();
-    let max_y = input.len();
+    let mut roll_map: HashSet<(u32, u32)> = HashSet::new();
     for (x_coord, row) in input.iter().enumerate() {
         for (y_coord, char) in row.chars().enumerate() {
-            if char.to_string() == "@".to_string() {
-                roll_map.insert((x_coord, y_coord));
+            if char.to_string() == "@" {
+                roll_map.insert((
+                    u32::try_from(x_coord).unwrap(),
+                    u32::try_from(y_coord).unwrap(),
+                ));
             }
         }
     }
-    (roll_map, max_x, max_y)
+    roll_map
 }
-fn find_total_accessible_rolls() -> u64 {
-    let (roll_map, max_x, max_y) = get_roll_coords();
-    let mut accessible_rolls: u64 = 0;
+
+fn find_total_accessible_rolls(roll_map: Option<&HashSet<(u32, u32)>>) -> Vec<(u32, u32)> {
+    let default_roll_map = if roll_map.is_none() {
+        get_roll_coords()
+    } else {
+        HashSet::new()
+    };
+    let roll_map: &HashSet<(u32, u32)> = roll_map.unwrap_or(&default_roll_map);
+    let mut accessible_rolls: Vec<(u32, u32)> = Vec::new();
     for roll in roll_map.iter() {
         let neighbours = get_neighbours(roll.0, roll.1);
         let mut adjacent_rolls = 0;
         for neighbour in neighbours.iter() {
-            if let (Ok(nx), Ok(ny)) = (usize::try_from(neighbour.0), usize::try_from(neighbour.1)) {
+            if let (Ok(nx), Ok(ny)) = (u32::try_from(neighbour.0), u32::try_from(neighbour.1)) {
                 if roll_map.contains(&(nx, ny)) {
                     adjacent_rolls += 1;
                 }
@@ -57,11 +66,32 @@ fn find_total_accessible_rolls() -> u64 {
         }
 
         if adjacent_rolls < 4 {
-            accessible_rolls += 1;
+            accessible_rolls.push(*roll);
         }
     }
 
     accessible_rolls
+}
+
+fn remove_rolls_as_you_go() -> u32 {
+    let mut roll_map: HashSet<(u32, u32)> = get_roll_coords();
+    let mut removed_rolls: HashSet<(u32, u32)> = HashSet::new();
+    while !roll_map.is_empty() {
+        let touched: HashSet<(u32, u32)> = find_total_accessible_rolls(Some(&roll_map))
+            .into_iter()
+            .collect();
+        if removed_rolls.is_superset(&touched) || roll_map.intersection(&touched).count() == 0 {
+            // If we've already seen all these items, stop the loop as we've maxed out
+            // all the rolls we can touch
+            break;
+        }
+        for item in touched.iter() {
+            removed_rolls.insert(*item);
+            roll_map.remove(item);
+        }
+    }
+
+    u32::try_from(removed_rolls.len()).unwrap()
 }
 
 #[cfg(test)]
@@ -69,6 +99,10 @@ mod tests {
     use super::*;
     #[test]
     fn test_day_3() {
-        assert_eq!(find_total_accessible_rolls(), 13);
+        assert_eq!(find_total_accessible_rolls(None).len(), 13);
+    }
+    #[test]
+    fn test_day_3_part_2() {
+        assert_eq!(remove_rolls_as_you_go(), 43);
     }
 }
