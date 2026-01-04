@@ -44,7 +44,7 @@ cargo doc && cargo doc --open
 
 <!-- AOC TILES BEGIN -->
 <h1 align="center">
-  2025 - 14 ⭐ - Rust
+  2025 - 15 ⭐ - Rust
 </h1>
 <a href="src/solutions/day_1.rs">
   <img src=".aoc_tiles/tiles/2025/01.png" width="203px">
