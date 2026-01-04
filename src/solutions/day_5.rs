@@ -1,6 +1,7 @@
 use std::{
     cmp::{max, min},
     collections::HashSet,
+    ops::RangeInclusive,
 };
 
 use crate::utils::{
@@ -16,7 +17,7 @@ pub fn day_5() -> usize {
 }
 
 struct KitchenInventory {
-    valid_ranges: Vec<(u64, u64)>,
+    valid_ranges: Vec<RangeInclusive<u64>>,
     ingredient_ids: HashSet<u64>,
     validated_ingredients: HashSet<u64>,
     current_num_valid_ids: u64,
@@ -25,26 +26,25 @@ struct KitchenInventory {
 impl KitchenInventory {
     fn validate_ingredients(&mut self) {
         for ingredient in self.ingredient_ids.clone() {
-            for (lower, upper) in self.valid_ranges.clone() {
-                if (lower..upper).contains(&ingredient) {
+            for range in self.valid_ranges.clone() {
+                if range.contains(&ingredient) {
                     self.validated_ingredients.insert(ingredient);
                 }
             }
         }
     }
 
-    fn add_range(&mut self, mut new_range: (u64, u64)) {
-        let mut new_ranges: Vec<(u64, u64)> = Vec::new();
+    fn add_range(&mut self, mut new_range: RangeInclusive<u64>) {
+        let mut new_ranges: Vec<RangeInclusive<u64>> = Vec::new();
         let mut no_overlap: bool = true;
         while let Some(range) = self.valid_ranges.pop() {
-            if (range.0..range.1).contains(&new_range.0)
-                || (range.0..range.1).contains(&new_range.1)
-            {
-                new_range.0 = min(range.0, new_range.0);
-                new_range.1 = max(range.1, new_range.1);
-                new_ranges.push(new_range); // extend range
-                self.current_num_valid_ids += new_range.1.abs_diff(new_range.0);
-                self.current_num_valid_ids -= range.1.abs_diff(range.0); // remove old range sum
+            if range.contains(&new_range.start()) || range.contains(&new_range.end()) {
+                let new_start = min(*range.start(), *new_range.start());
+                let new_end = max(*range.end(), *new_range.end());
+                new_range = new_start..=new_end;
+                new_ranges.push(new_range.clone()); // extend range
+                self.current_num_valid_ids += new_range.end().abs_diff(*new_range.start());
+                self.current_num_valid_ids -= range.end().abs_diff(*range.start()); // remove old range sum
                 no_overlap = false;
                 break;
             } else {
@@ -52,15 +52,15 @@ impl KitchenInventory {
             }
         }
         if no_overlap {
-            new_ranges.push(new_range); // add new range and new range sum
-            self.current_num_valid_ids += new_range.1.abs_diff(new_range.0);
+            new_ranges.push(new_range.clone()); // add new range and new range sum
+            self.current_num_valid_ids += new_range.end().abs_diff(*new_range.start());
         } else {
             new_ranges.extend(self.valid_ranges.clone()) //add old ranges back in
         }
         self.valid_ranges = new_ranges;
     }
 
-    fn add_ranges(&mut self, new_ranges: Vec<(u64, u64)>) {
+    fn add_ranges(&mut self, new_ranges: Vec<RangeInclusive<u64>>) {
         for range in new_ranges {
             self.add_range(range);
         }
@@ -83,7 +83,7 @@ fn parse_input() -> KitchenInventory {
                     .expect("Failed to convert range to numbers")
             })
             .collect();
-        ingredients_parsed.add_range((nums[0], nums[1] + 1));
+        ingredients_parsed.add_range(RangeInclusive::new(nums[0], nums[1]));
         println!("{:?}", ingredients_parsed.valid_ranges)
     }
     let ingredient_ids: Vec<u64> = split_lines(input[1].clone())
