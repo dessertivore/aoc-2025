@@ -59,12 +59,12 @@ fn process_input_part_2(input: Vec<String>) -> Vec<Vec<u64>> {
     let line_len = input[0].len();
     let mut columns: Vec<Option<u64>> = vec![Some(0); line_len];
 
-    for i in 0..line_len {
+    for (i, column) in columns.iter_mut().enumerate() {
         if input
             .iter()
             .all(|line| line.chars().nth(i).is_some_and(|c| c.is_whitespace()))
         {
-            columns[i] = None;
+            *column = None;
         }
     }
 

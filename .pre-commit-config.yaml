@@ -8,3 +8,10 @@ repos:
           - --overwrite-year=2025
           - --count-as-solved-when=on_leaderboard
           - --what-to-show-on-right-side=checkmark
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: cargo-check
+        args: ["--workspace"]
+      - id: fmt
+        args: ["--", "--check"]
