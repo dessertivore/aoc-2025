@@ -3,14 +3,30 @@ use std::collections::VecDeque;
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 3.
-pub fn day_3() -> u64 {
+pub fn day_3() {
     let part_1 = find_total_joltage(true);
     let part_2 = find_total_joltage(false);
     println!("Day 3! Part 1: {:?}, part 2: {:?}", part_1, part_2);
-
-    part_1
 }
 
+/// Finds the total joltage based on the input data and the specified part of the problem.
+///
+/// # Arguments
+///
+/// * `part_1` - A boolean indicating whether to calculate the result for part 1 (`true`)
+///   or part 2 (`false`) of the problem.
+///
+/// # Returns
+///
+/// The total joltage as a `u64`.
+///
+/// # Details
+///
+/// This function processes the input data by splitting it into lines and then iterating
+/// over each line. Depending on the value of `part_1`, it either calculates the largest
+/// two-digit number (`find_largest_number`) or the largest number of a specified length
+/// (`find_largest_number_variable_length`) for each line. The results are summed up and
+/// returned.
 fn find_total_joltage(part_1: bool) -> u64 {
     let input: Vec<String> = split_lines(get_aoc_input(2025, 3));
     let mut all_nums: VecDeque<u64> = VecDeque::new();
@@ -25,6 +41,16 @@ fn find_total_joltage(part_1: bool) -> u64 {
     all_nums.iter().sum()
 }
 
+/// Finds the largest two-digit number that can be formed by concatenating any two digits
+/// (in order) from the input string.
+///
+/// # Arguments
+///
+/// * `num_as_string` - A string of digits.
+///
+/// # Returns
+///
+/// The largest two-digit number (`u64`) that can be formed by concatenating any two digits in order.
 fn find_largest_number(num_as_string: String) -> u64 {
     let len: usize = num_as_string.len();
     let mut largest_substring_num: u64 = 0;
@@ -42,6 +68,17 @@ fn find_largest_number(num_as_string: String) -> u64 {
     largest_substring_num
 }
 
+/// Finds the largest number of a specified length that can be formed by removing digits
+/// from the input string while preserving the order of the remaining digits.
+///
+/// # Arguments
+///
+/// * `num` - A string of digits.
+/// * `target_len` - The desired length of the resulting number.
+///
+/// # Returns
+///
+/// The largest number (`u64`) of length `target_len` that can be formed by removing digits.
 fn find_largest_number_variable_length(num: String, target_len: usize) -> u64 {
     let mut to_remove = num.len() - target_len;
     let mut stack: Vec<char> = Vec::new();

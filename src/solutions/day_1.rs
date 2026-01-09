@@ -5,6 +5,28 @@ pub fn day_1() {
     println!("Part 2: {:?}", move_dial(None, true));
 }
 
+/// Moves a dial based on a series of instructions and calculates either the number of times
+/// the dial stops at zero or the number of times it passes through zero, depending on the mode.
+///
+/// # Arguments
+///
+/// * `input` - An optional vector of strings representing the movement instructions.
+///             Each instruction is a string where the first character is the direction
+///             ('L' for left, 'R' for right) and the remaining characters are the distance.
+///             If `None`, the input is fetched using `get_aoc_input` for day 1 of 2025.
+/// * `part_2` - A boolean indicating the mode of operation:
+///              - `false`: Count the number of times the dial stops at zero.
+///              - `true`: Count the number of times the dial passes through zero.
+///
+/// # Returns
+///
+/// Returns an `i16` representing the count of either stops at zero (`part_2 == false`)
+/// or passes through zero (`part_2 == true`).
+///
+/// # Panics
+///
+/// Panics if an instruction contains an invalid direction (not 'L' or 'R') or if the
+/// distance part of the instruction cannot be parsed as an integer.
 fn move_dial(input: Option<Vec<String>>, part_2: bool) -> i16 {
     let input = input.unwrap_or_else(|| split_lines(get_aoc_input(2025, 1)));
 
@@ -16,12 +38,10 @@ fn move_dial(input: Option<Vec<String>>, part_2: bool) -> i16 {
         let direction = &instruction[..1];
         let how_far: i16 = instruction[1..].parse().unwrap();
         let prev_pos = current_pos;
-        if direction == "L" {
-            current_pos -= how_far;
-        } else if direction == "R" {
-            current_pos += how_far
-        } else {
-            panic!("Invalid direction!")
+        match direction {
+            "L" => current_pos -= how_far,
+            "R" => current_pos += how_far,
+            _ => panic!("Invalid direction!"),
         }
 
         if part_2 {

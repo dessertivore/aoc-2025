@@ -14,6 +14,8 @@ pub fn day_5() {
     );
 }
 
+/// Represents the kitchen inventory, including valid ingredient ranges, ingredient IDs,
+/// validated ingredients, and the current number of valid IDs.
 struct KitchenInventory {
     valid_ranges: Vec<RangeInclusive<u64>>,
     ingredient_ids: HashSet<u64>,
@@ -22,6 +24,7 @@ struct KitchenInventory {
 }
 
 impl KitchenInventory {
+    /// Validates ingredient IDs against the valid ranges and populates `validated_ingredients`.
     fn validate_ingredients(&mut self) {
         for ingredient in self.ingredient_ids.clone() {
             for range in self.valid_ranges.clone() {
@@ -32,11 +35,20 @@ impl KitchenInventory {
         }
     }
 
+    /// Adds a new valid range and updates the count of valid IDs.
+    ///
+    /// # Arguments
+    ///
+    /// * `new_range` - The range of valid ingredient IDs to add.
     fn add_range(&mut self, new_range: RangeInclusive<u64>) {
         self.current_num_valid_ids += new_range.end().abs_diff(*new_range.start());
         self.valid_ranges.push(new_range);
     }
 
+    /// Aggregates overlapping or adjacent valid ranges and updates the count of valid IDs.
+    ///
+    /// This function merges overlapping or adjacent ranges in `valid_ranges` to avoid double-counting,
+    /// and recalculates `current_num_valid_ids`.
     fn aggregate_ranges(&mut self) {
         self.valid_ranges.sort_by(|x, y| x.start().cmp(y.start()));
         let mut idx_a = 0;
@@ -84,6 +96,19 @@ impl KitchenInventory {
     }
 }
 
+/// Parses the input for Day 5 and returns a populated `KitchenInventory` struct.
+///
+/// The input is expected to be two sections separated by a blank line:
+/// - The first section contains valid ingredient ranges (one per line, in the form "start-end").
+/// - The second section contains ingredient IDs (one per line).
+///
+/// # Returns
+///
+/// A `KitchenInventory` struct with parsed ranges and ingredient IDs.
+///
+/// # Panics
+///
+/// Panics if the input cannot be parsed as expected.
 fn parse_input() -> KitchenInventory {
     let input: Vec<String> = split_string_by_specified_char(get_aoc_input(2025, 5), "\n\n");
     let mut ingredients_parsed = KitchenInventory {
@@ -119,6 +144,11 @@ fn parse_input() -> KitchenInventory {
     ingredients_parsed
 }
 
+/// Returns the number of ingredient IDs that are valid according to the parsed ranges.
+///
+/// # Returns
+///
+/// The number of valid ingredient IDs (`usize`).
 fn num_valid_ingredients() -> usize {
     let mut ingredients_parsed: KitchenInventory = parse_input();
     ingredients_parsed.validate_ingredients();

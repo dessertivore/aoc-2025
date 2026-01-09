@@ -12,6 +12,17 @@ pub fn day_4() {
     );
 }
 
+/// Returns the coordinates of all 8 neighbouring positions (including diagonals)
+/// for a given (x, y) coordinate as a vector of (isize, isize) tuples.
+///
+/// # Arguments
+///
+/// * `x` - The x-coordinate.
+/// * `y` - The y-coordinate.
+///
+/// # Returns
+///
+/// A vector of tuples representing the coordinates of all neighbouring positions.
 fn get_neighbours(x: u32, y: u32) -> Vec<(isize, isize)> {
     let directions = [
         (-1, -1),
@@ -30,6 +41,11 @@ fn get_neighbours(x: u32, y: u32) -> Vec<(isize, isize)> {
         .collect()
 }
 
+/// Parses the input for Day 4 and returns a set of coordinates where rolls ('@') are located.
+///
+/// # Returns
+///
+/// A `HashSet` containing tuples of (x, y) coordinates for each roll found in the input.
 fn get_roll_coords() -> HashSet<(u32, u32)> {
     let input: Vec<String> = split_lines(get_aoc_input(2025, 4));
     let mut roll_map: HashSet<(u32, u32)> = HashSet::new();
@@ -46,6 +62,17 @@ fn get_roll_coords() -> HashSet<(u32, u32)> {
     roll_map
 }
 
+/// Finds all "accessible" rolls in the provided roll map.
+/// A roll is considered accessible if it has fewer than 4 adjacent rolls (including diagonals).
+///
+/// # Arguments
+///
+/// * `roll_map` - An optional reference to a set of roll coordinates. If `None`, the function
+///                will parse the input to generate the roll map.
+///
+/// # Returns
+///
+/// A vector of (x, y) coordinates for all accessible rolls.
 fn find_total_accessible_rolls(roll_map: Option<&HashSet<(u32, u32)>>) -> Vec<(u32, u32)> {
     let default_roll_map = if roll_map.is_none() {
         get_roll_coords()
@@ -73,6 +100,20 @@ fn find_total_accessible_rolls(roll_map: Option<&HashSet<(u32, u32)>>) -> Vec<(u
     accessible_rolls
 }
 
+/// Iteratively removes all accessible rolls from the roll map until no more can be removed,
+/// and returns the total number of rolls removed.
+///
+/// A roll is considered "accessible" if it has fewer than 4 adjacent rolls (including diagonals).
+/// In each iteration, all currently accessible rolls are removed from the map. The process
+/// repeats until no new accessible rolls can be found or removed.
+///
+/// # Returns
+///
+/// * `u32` - The total number of rolls that were removed from the map.
+///
+/// # Panics
+///
+/// Panics if the number of removed rolls cannot be converted to `u32`.
 fn remove_rolls_as_you_go() -> u32 {
     let mut roll_map: HashSet<(u32, u32)> = get_roll_coords();
     let mut removed_rolls: HashSet<(u32, u32)> = HashSet::new();

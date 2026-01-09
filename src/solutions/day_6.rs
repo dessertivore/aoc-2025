@@ -9,12 +9,27 @@ pub fn day_6() {
     );
 }
 
+/// Represents a maths sheet containing lines of numbers and a list of instructions.
+///
+/// # Fields
+///
+/// * `lines_of_numbers` - A vector of vectors, where each inner vector contains the numbers for a line.
+/// * `instructions` - A vector of strings representing the operation to apply to each line.
 #[derive(Debug)]
 struct MathsSheet {
     lines_of_numbers: Vec<Vec<u64>>,
     instructions: Vec<String>,
 }
 
+/// Processes the input for Part 1 by splitting each line into numbers and collecting them row-wise.
+///
+/// # Arguments
+///
+/// * `input` - A vector of strings, each representing a line of numbers separated by whitespace.
+///
+/// # Returns
+///
+/// A vector of vectors of `u64`, where each inner vector contains the numbers from a line.
 fn process_input_part_1(input: Vec<String>) -> Vec<Vec<u64>> {
     let mut output_lines = Vec::new();
     for (pos, line) in input.iter().enumerate() {
@@ -29,6 +44,16 @@ fn process_input_part_1(input: Vec<String>) -> Vec<Vec<u64>> {
     }
     output_lines
 }
+
+/// Processes the input for Part 1 by splitting each line into numbers and collecting them row-wise.
+///
+/// # Arguments
+///
+/// * `input` - A vector of strings, each representing a line of numbers separated by whitespace.
+///
+/// # Returns
+///
+/// A vector of vectors of `u64`, where each inner vector contains the numbers from a line.
 fn process_input_part_2(input: Vec<String>) -> Vec<Vec<u64>> {
     println!("Finding whitespaces in input for part 2.");
     let line_len = input[0].len();
@@ -71,6 +96,15 @@ fn process_input_part_2(input: Vec<String>) -> Vec<Vec<u64>> {
 }
 
 impl MathsSheet {
+    /// Processes the input for Part 1 by splitting each line into numbers and collecting them row-wise.
+    ///
+    /// # Arguments
+    ///
+    /// * `input` - A vector of strings, each representing a line of numbers separated by whitespace.
+    ///
+    /// # Returns
+    ///
+    /// A vector of vectors of `u64`, where each inner vector contains the numbers from a line.
     fn solve_line(&self, line: &Vec<u64>, operator_pos: usize) -> u64 {
         let mut line_total: u64 = 0;
         let operator = self.instructions[operator_pos].as_str();
@@ -86,6 +120,11 @@ impl MathsSheet {
         line_total
     }
 
+    /// Solves all lines in the maths sheet by applying the corresponding operator to each line and summing the results.
+    ///
+    /// # Returns
+    ///
+    /// The grand total after processing all lines.
     fn solve_all_lines(&self) -> u64 {
         let mut grand_total: u64 = 0;
         for pos in 0..self.lines_of_numbers.len() {
@@ -96,6 +135,15 @@ impl MathsSheet {
     }
 }
 
+/// Processes the input and solves all lines for either Part 1 or Part 2.
+///
+/// # Arguments
+///
+/// * `part_1` - A boolean indicating whether to use Part 1 (`true`) or Part 2 (`false`) processing.
+///
+/// # Returns
+///
+/// The final result as a `u64` after processing all lines and applying the instructions.
 fn solve_all_lines(part_1: bool) -> u64 {
     let mut input: Vec<String> = split_lines(get_aoc_input(2025, 6));
     let mut sheet: MathsSheet = MathsSheet {
