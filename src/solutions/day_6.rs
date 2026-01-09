@@ -1,11 +1,12 @@
 use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 6.
-pub fn day_6() -> u64 {
-    let part_1 = solve_all_lines(true);
-    println!("Day 6! Part 1: {:?}", part_1);
-
-    part_1
+pub fn day_6() {
+    println!(
+        "Day 6! Part 1: {:?}, Part 2: {:?}",
+        solve_all_lines(true),
+        solve_all_lines(false)
+    );
 }
 
 #[derive(Debug)]
@@ -14,8 +15,63 @@ struct MathsSheet {
     instructions: Vec<String>,
 }
 
+fn process_input_part_1(input: Vec<String>) -> Vec<Vec<u64>> {
+    let mut output_lines = Vec::new();
+    for (pos, line) in input.iter().enumerate() {
+        let chars = line.split_whitespace();
+        if output_lines.is_empty() {
+            let char_count = chars.count();
+            output_lines = vec![Vec::new(); char_count]; // Instantiate vertical lines
+        }
+        for char in line.split_whitespace() {
+            output_lines[pos].push(char.parse::<u64>().unwrap());
+        }
+    }
+    output_lines
+}
+fn process_input_part_2(input: Vec<String>) -> Vec<Vec<u64>> {
+    println!("Finding whitespaces in input for part 2.");
+    let line_len = input[0].len();
+    let mut columns: Vec<Option<u64>> = vec![Some(0); line_len];
+
+    for i in 0..line_len {
+        if input
+            .iter()
+            .all(|line| line.chars().nth(i).is_some_and(|c| c.is_whitespace()))
+        {
+            columns[i] = None;
+        }
+    }
+
+    // Build numbers column-wise, keeping x_coord and y_coord
+    for (y_coord, line) in input.iter().enumerate() {
+        println!("Line {:?} being parsed.", y_coord);
+        for (x_coord, ch) in line.chars().enumerate() {
+            if columns[x_coord].is_none() {
+                continue;
+            } else if let Some(num) = ch.to_digit(10) {
+                columns[x_coord] = columns[x_coord].map(|current| current * 10 + num as u64);
+            }
+        }
+    }
+
+    let mut fully_parsed = Vec::new();
+    let mut current_nums: Vec<u64> = Vec::new();
+    for item in columns.iter().take(line_len) {
+        if item.is_none() {
+            fully_parsed.push(current_nums);
+            current_nums = Vec::new();
+        } else {
+            current_nums.push(item.unwrap());
+        }
+    }
+    fully_parsed.push(current_nums); // push last vec
+
+    fully_parsed
+}
+
 impl MathsSheet {
-    fn solve_line(&self, line: Vec<u64>, operator_pos: usize) -> u64 {
+    fn solve_line(&self, line: &Vec<u64>, operator_pos: usize) -> u64 {
         let mut line_total: u64 = 0;
         let operator = self.instructions[operator_pos].as_str();
         match operator {
@@ -33,15 +89,11 @@ impl MathsSheet {
     fn solve_all_lines(&self) -> u64 {
         let mut grand_total: u64 = 0;
         for pos in 0..self.lines_of_numbers.len() {
-            grand_total += self.solve_line(self.lines_of_numbers[pos].clone(), pos);
+            grand_total += self.solve_line(&self.lines_of_numbers[pos], pos);
         }
 
         grand_total
     }
-
-    // fn part_2_line_parsing(&self) {
-    //     for line in self.lines_of_numbers {}
-    // }
 }
 
 fn solve_all_lines(part_1: bool) -> u64 {
@@ -56,21 +108,8 @@ fn solve_all_lines(part_1: bool) -> u64 {
         .split_ascii_whitespace()
         .map(String::from)
         .collect(); // instructions are on last line
-    let mut vertical_lines: Vec<Vec<u64>> = Vec::new();
     if part_1 {
-        for line in input {
-            let mut pos = 0;
-            let chars = line.split_whitespace();
-            if vertical_lines.is_empty() {
-                let char_count = chars.clone().count(); // Clone the iterator to avoid consuming it
-                vertical_lines = vec![Vec::new(); char_count]; // Instantiate vertical lines
-            }
-            for char in line.split_whitespace() {
-                vertical_lines[pos].push(char.parse::<u64>().unwrap());
-                pos += 1;
-            }
-        }
-        sheet.lines_of_numbers = vertical_lines;
+        sheet.lines_of_numbers = process_input_part_1(input);
 
         if cfg!(test) {
             println!("{:?}", sheet);
@@ -78,22 +117,7 @@ fn solve_all_lines(part_1: bool) -> u64 {
 
         sheet.solve_all_lines()
     } else {
-        // for line in input {
-        //     let mut pos = 0;
-        //     let nums = split_string_by_specified_char(line, " ");
-        //     if vertical_lines.is_empty() {
-        //         let char_count = nums.len(); // Clone the iterator to avoid consuming it
-        //         vertical_lines = vec![Vec::new(); char_count]; // Instantiate vertical lines
-        //     }
-        //     for num in nums {
-        //         let char_pos = 0;
-        //         for char in num.chars() {
-        //             vertical_lines[pos][char_pos]
-        //         }
-        //     }
-        // I haven't finished this yet :(
-        // }
-        sheet.lines_of_numbers = vertical_lines;
+        sheet.lines_of_numbers = process_input_part_2(input);
 
         if cfg!(test) {
             println!("{:?}", sheet);
@@ -109,5 +133,9 @@ mod tests {
     #[test]
     fn test_day_6() {
         assert_eq!(solve_all_lines(true), 4277556);
+    }
+    #[test]
+    fn test_day_6_part_2() {
+        assert_eq!(solve_all_lines(false), 3263827);
     }
 }
