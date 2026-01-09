@@ -14,7 +14,7 @@
 // };
 
 // /// Runs the solution for Advent of Code Day 8.
-pub fn day_8() {
+pub fn main() {
     // let part_1 = parse_input();
     // println!("Day 8! Part 1: {:?}", part_1);
 }

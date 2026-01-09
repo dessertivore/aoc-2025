@@ -7,10 +7,10 @@ use std::{
     hash::Hash,
 };
 
-use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 // /// Runs the solution for Advent of Code Day 11.
-pub fn day_11() -> usize {
+pub fn main() {
     let mut server_rack = parse_input(11);
     server_rack.dfs(
         "you".to_string(),
@@ -21,8 +21,6 @@ pub fn day_11() -> usize {
     let part_1 = server_rack.paths_so_far.len();
     let part_2 = part_2();
     println!("Day 11! Part 1: {:?}, Part 2: {:?}", part_1, part_2);
-
-    part_1
 }
 
 #[derive(Debug, Clone)]

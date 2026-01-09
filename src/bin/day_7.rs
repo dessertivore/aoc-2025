@@ -1,15 +1,13 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 7.
-pub fn day_7() -> u32 {
+pub fn main() {
     let part_1 = count_splits();
     let manifold = parse_input();
     let part_2 = recursive_find_paths(manifold, HashSet::new(), HashMap::new());
     println!("Day 7! Part 1: {:?}, Part 2: {:?}", part_1, part_2);
-
-    part_1
 }
 
 #[derive(Debug, Clone)]

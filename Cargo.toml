@@ -12,3 +12,6 @@ regex = "1.12.2"
 reqwest = { version = "0.12", features = ["blocking","cookies"] }
 serde = "1.0.228"
 typenum = "1.19.0"
+
+[workspace]
+["utils"]

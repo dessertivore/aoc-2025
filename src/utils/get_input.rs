@@ -40,12 +40,12 @@ use std::fs;
 /// let input = get_input::get_aoc_input(2025, 1);
 /// ```
 pub fn get_aoc_input(year: u32, day: u32) -> String {
-    let testing: bool = cfg!(test);
+    let testing: bool = cfg!(test); // TODO fix this - no longer works with new structure
     if testing {
         if year != 2025 {
             panic!("Only 2025 test inputs can be found here.")
         }
-        let file_name: String = format!("test-inputs/day_{}.txt", day);
+        let file_name: String = format!("../../test-inputs/day_{}.txt", day);
         let text = fs::read_to_string(file_name).expect("Unable to read text file :(");
         return text;
     }

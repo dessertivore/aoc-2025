@@ -1,11 +1,11 @@
 use std::{cmp::max, collections::HashSet, ops::RangeInclusive};
 
-use crate::utils::{
+use aoc_2025::utils::{
     get_input::get_aoc_input, parsing::split_lines, parsing::split_string_by_specified_char,
 };
 
 /// Runs the solution for Advent of Code Day 5.
-pub fn day_5() {
+pub fn main() {
     let part_1 = num_valid_ingredients();
     let part_2 = parse_input();
     println!(

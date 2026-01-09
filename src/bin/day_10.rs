@@ -10,14 +10,11 @@
 // use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 // /// Runs the solution for Advent of Code Day 10.
-pub fn day_10() -> u64 {
-    let part_1 = 0;
+pub fn main() {
     println!(
         "Day 10! Part 1: {:?}, Part 2: {:?}",
-        part_1, "Not done yet!"
+        "Not done yet!", "Not done yet!"
     );
-
-    part_1
 }
 
 // #[derive(Debug, Clone)]

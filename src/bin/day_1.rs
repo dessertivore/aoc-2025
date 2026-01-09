@@ -1,6 +1,7 @@
-use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_lines};
 
-pub fn day_1() {
+// Print day 1 solutions
+pub fn main() {
     println!("Part 1: {:?}", move_dial(None, false));
     println!("Part 2: {:?}", move_dial(None, true));
 }

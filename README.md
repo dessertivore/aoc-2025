@@ -13,12 +13,11 @@ The repository is organized as follows:
 ```
 aoc-2025/
 ├── src/
-│   ├── solutions/
+│   ├── bin/
 │   │   ├── day_1.rs
 │   │   ├── day_2.rs
-│   ├── utils/
-│   │   ├── mod.rs
-│   └── main.rs
+│   └── utils/
+│       ├─── mod.rs
 └── README.md
 ```
 
@@ -27,15 +26,19 @@ aoc-2025/
 
 ## Running the Code
 
-The following code will print all the solutions I have so far to the console.
+First, compile the code:
+```bash
+cargo build
+```
+
+Next, solve the day you want, using the `make` command `solve_day` with your day of 
+choice. E.g.:
+```bash
+DAY=2 make solve_day
+```
 
 Note: requires `cookie.txt` file in this directory, which contains your AoC user cookie
 in order to get your inputs.
-
-```bash
-cargo build
-cargo run
-```
 
 To build the docs, run:
 ```bash
@@ -46,40 +49,40 @@ cargo doc && cargo doc --open
 <h1 align="center">
   2025 - 16 ⭐ - Rust
 </h1>
-<a href="src/solutions/day_1.rs">
+<a href="src/bin/day_1.rs">
   <img src=".aoc_tiles/tiles/2025/01.png" width="203px">
 </a>
-<a href="src/solutions/day_2.rs">
+<a href="src/bin/day_2.rs">
   <img src=".aoc_tiles/tiles/2025/02.png" width="203px">
 </a>
-<a href="src/solutions/day_3.rs">
+<a href="src/bin/day_3.rs">
   <img src=".aoc_tiles/tiles/2025/03.png" width="203px">
 </a>
-<a href="src/solutions/day_4.rs">
+<a href="src/bin/day_4.rs">
   <img src=".aoc_tiles/tiles/2025/04.png" width="203px">
 </a>
-<a href="src/solutions/day_5.rs">
+<a href="src/bin/day_5.rs">
   <img src=".aoc_tiles/tiles/2025/05.png" width="203px">
 </a>
-<a href="src/solutions/day_6.rs">
+<a href="src/bin/day_6.rs">
   <img src=".aoc_tiles/tiles/2025/06.png" width="203px">
 </a>
-<a href="src/solutions/day_7.rs">
+<a href="src/bin/day_7.rs">
   <img src=".aoc_tiles/tiles/2025/07.png" width="203px">
 </a>
-<a href="src/solutions/day_8.rs">
+<a href="src/bin/day_8.rs">
   <img src=".aoc_tiles/tiles/2025/08.png" width="203px">
 </a>
-<a href="src/solutions/day_9.rs">
+<a href="src/bin/day_9.rs">
   <img src=".aoc_tiles/tiles/2025/09.png" width="203px">
 </a>
-<a href="src/solutions/day_10.rs">
+<a href="src/bin/day_10.rs">
   <img src=".aoc_tiles/tiles/2025/10.png" width="203px">
 </a>
-<a href="src/solutions/day_11.rs">
+<a href="src/bin/day_11.rs">
   <img src=".aoc_tiles/tiles/2025/11.png" width="203px">
 </a>
-<a href="src/solutions/day_12.rs">
+<a href="src/bin/day_12.rs">
   <img src=".aoc_tiles/tiles/2025/12.png" width="203px">
 </a>
 <!-- AOC TILES END -->

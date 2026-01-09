@@ -1,7 +1,7 @@
-use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 6.
-pub fn day_6() {
+pub fn main() {
     println!(
         "Day 6! Part 1: {:?}, Part 2: {:?}",
         solve_all_lines(true),

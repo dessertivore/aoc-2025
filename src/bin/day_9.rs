@@ -3,14 +3,12 @@ use std::{
     collections::{HashMap, HashSet},
 };
 
-use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 9.
-pub fn day_9() -> u64 {
+pub fn main() {
     let part_1 = largest_area();
     println!("Day 9! Part 1: {:?}, Part 2: {:?}", part_1, "Not done yet!");
-
-    part_1
 }
 
 #[derive(Debug, Clone)]

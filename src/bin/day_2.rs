@@ -1,4 +1,4 @@
-use crate::utils::{get_input::get_aoc_input, parsing::split_string_by_specified_char};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_string_by_specified_char};
 use std::collections::HashSet;
 
 /// Runs the solution for Advent of Code Day 2.
@@ -9,12 +9,10 @@ use std::collections::HashSet;
 /// # Returns
 /// A tuple `(part_1, part_2)` where each value is the sum of all invalid IDs
 /// detected for the corresponding part.
-pub fn day_2() -> (u64, u64) {
+pub fn main() {
     let part_1 = find_all_invalid_ids(1);
     let part_2 = find_all_invalid_ids(2);
     println!("Day 2! Part 1: {:?}, part 2: {:?}", part_1, part_2);
-
-    (part_1, part_2)
 }
 
 /// Parses a numeric range of the form `"start-end"` into a `Range<u64>`.

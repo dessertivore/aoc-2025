@@ -1,9 +1,9 @@
 use std::collections::VecDeque;
 
-use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 3.
-pub fn day_3() {
+pub fn main() {
     let part_1 = find_total_joltage(true);
     let part_2 = find_total_joltage(false);
     println!("Day 3! Part 1: {:?}, part 2: {:?}", part_1, part_2);

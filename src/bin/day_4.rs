@@ -1,9 +1,9 @@
 use std::collections::HashSet;
 
-use crate::utils::{get_input::get_aoc_input, parsing::split_lines};
+use aoc_2025::utils::{get_input::get_aoc_input, parsing::split_lines};
 
 /// Runs the solution for Advent of Code Day 4.
-pub fn day_4() {
+pub fn main() {
     let part_1 = find_total_accessible_rolls(None);
     println!(
         "Day 4! Part 1: {:?}, Part 2: {:?}",
