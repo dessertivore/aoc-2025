@@ -27,10 +27,9 @@ fn find_total_joltage(part_1: bool) -> u64 {
 
 fn find_largest_number(num_as_string: String) -> u64 {
     let len: usize = num_as_string.len();
-    let mut current_pos: usize = 0;
     let mut largest_substring_num: u64 = 0;
-    for first_ch in num_as_string[current_pos..len].chars() {
-        for second_ch in num_as_string[current_pos + 1..len].chars() {
+    for (pos, first_ch) in num_as_string.char_indices() {
+        for second_ch in num_as_string[pos + 1..len].chars() {
             let full_num: u64 = format!("{}{}", first_ch, second_ch)
                 .parse::<u64>()
                 .unwrap_or(0);
@@ -38,7 +37,6 @@ fn find_largest_number(num_as_string: String) -> u64 {
                 largest_substring_num = full_num;
             }
         }
-        current_pos += 1;
     }
 
     largest_substring_num
